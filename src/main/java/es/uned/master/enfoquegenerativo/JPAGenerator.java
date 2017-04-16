@@ -34,7 +34,6 @@ import es.uned.master.enfoquegenerativo.xml.beans.Jpa;
 public class JPAGenerator implements ApplicationRunner {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JPAGenerator.class);
-
 	
 	private static final String XML_SCHEMA_FILE = "./schema/jpa.xsd";
 	private static final String ENTITY_JPA_TEMPLATE = "./templates/entity.vm";
