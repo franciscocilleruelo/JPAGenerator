@@ -98,8 +98,7 @@ public class JPAGenerator implements ApplicationRunner {
 			System.exit(0);
 		}
 		
-		if (jpa!=null){
-			
+		if (jpa!=null){		
 			String packageName = jpa.getPackageName();
 			String packagePath = packageName.replace(".", "\\");
 			String fullPath = targetDirectory + "\\" +packagePath;
