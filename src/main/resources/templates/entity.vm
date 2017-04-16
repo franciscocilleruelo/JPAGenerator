@@ -1,0 +1,316 @@
+package ${packageName}.entity;
+
+import java.util.Set;
+
+import javax.persistence.*;
+
+#set($entity = ${domainObject.entity})
+
+@Entity
+@Table(#if(${entity.table.name})name="${entity.table.name}"#end 
+		#if(${entity.table.schema}), schema="${entity.table.schema}"#end
+		#if(${entity.table.catalog}), catalog="${entity.table.catalog}"#end)
+public class ${domainObject.name} {
+	
+	#foreach(${field} in ${entity.fields.field})
+    	#if(${field.isPrimaryKey})
+    		@Id
+    		@GeneratedValue(strategy=GenerationType.AUTO)
+    	#end
+    	@Column(name="${field.columnName}")
+    	private ${field.type} ${field.name};
+    	
+	#end  
+	
+	#foreach(${oneOneDirect} in ${entity.associations.oneOneDirect})
+		@OneToOne(#if(${oneOneDirect.cascade})
+			cascade=
+				#if(${oneOneDirect.cascade.all})
+					CascadeType.ALL
+				#else
+					#if(${oneOneDirect.cascade.persist})
+					CascadeType.PERSIST
+					#end
+					#if(${oneOneDirect.cascade.merge})
+						, CascadeType.MERGE
+					#end
+					#if(${oneOneDirect.cascade.remove})
+						, CascadeType.REMOVE
+					#end
+					#if(${oneOneDirect.cascade.refresh})
+						, CascadeType.REFRESH
+					#end
+					#if(${oneOneDirect.cascade.detach})
+						, CascadeType.DETACH
+					#end
+				#end	
+			#end
+			#if(${oneOneDirect.retrievingMode})
+				, fetch=FetchType.${oneOneDirect.retrievingMode.toUpperCase()}
+			#end)
+		#if(${oneOneDirect.joinColumns.joinColumn.size()}>1)
+			@JoinColumns({				
+		#end
+		#foreach(${joinColumn} in ${oneOneDirect.joinColumns.joinColumn})
+			@JoinColumn(name="${joinColumn.own}", referencedColumnName="${joinColumn.referenced}")
+		#end
+		#if(${oneOneDirect.joinColumns.joinColumn.size()}>1)
+			})
+		#end	
+		private ${oneOneDirect.relatedEntity} ${oneOneDirect.name};
+	#end
+	
+	#foreach(${manyManyInverse} in ${entity.associations.manyManyInverse})
+		@ManyToMany(mappedBy="${manyManyInverse.referencedProperty}"
+			#if(${manyManyInverse.cascade})
+				,cascade=
+				#if(${manyManyInverse.cascade.all})
+					CascadeType.ALL
+				#else
+					#if(${manyManyInverse.cascade.persist})
+					CascadeType.PERSIST
+					#end
+					#if(${manyManyInverse.cascade.merge})
+						, CascadeType.MERGE
+					#end
+					#if(${manyManyInverse.cascade.remove})
+						, CascadeType.REMOVE
+					#end
+					#if(${manyManyInverse.cascade.refresh})
+						, CascadeType.REFRESH
+					#end
+					#if(${manyManyInverse.cascade.detach})
+						, CascadeType.DETACH
+					#end
+				#end	
+			#end
+			#if(${manyManyInverse.retrievingMode})
+				, fetch=FetchType.${manyManyInverse.retrievingMode.toUpperCase()}
+			#end)
+		private Set<${manyManyInverse.relatedEntity}> ${manyManyInverse.name};
+	#end
+	
+	#foreach(${oneOneInverse} in ${entity.associations.oneOneInverse})
+		@OneToOne(mappedBy="${oneOneInverse.referencedProperty}"
+			#if(${oneOneInverse.cascade})
+				,cascade=
+				#if(${oneOneInverse.cascade.all})
+					CascadeType.ALL
+				#else
+					#if(${oneOneInverse.cascade.persist})
+					CascadeType.PERSIST
+					#end
+					#if(${oneOneInverse.cascade.merge})
+						, CascadeType.MERGE
+					#end
+					#if(${oneOneInverse.cascade.remove})
+						, CascadeType.REMOVE
+					#end
+					#if(${oneOneInverse.cascade.refresh})
+						, CascadeType.REFRESH
+					#end
+					#if(${oneOneInverse.cascade.detach})
+						, CascadeType.DETACH
+					#end
+				#end	
+			#end
+			#if(${oneOneInverse.retrievingMode})
+				, fetch=FetchType.${oneOneInverse.retrievingMode.toUpperCase()}
+			#end)
+		private ${oneOneInverse.relatedEntity} ${oneOneInverse.name};
+	#end
+	
+	#foreach(${oneMany} in ${entity.associations.oneMany})
+		@OneToMany(mappedBy="${oneMany.referencedProperty}"
+			#if(${oneMany.cascade})
+				,cascade=
+				#if(${oneMany.cascade.all})
+					CascadeType.ALL
+				#else
+					#if(${oneMany.cascade.persist})
+					CascadeType.PERSIST
+					#end
+					#if(${oneMany.cascade.merge})
+						, CascadeType.MERGE
+					#end
+					#if(${oneMany.cascade.remove})
+						, CascadeType.REMOVE
+					#end
+					#if(${oneMany.cascade.refresh})
+						, CascadeType.REFRESH
+					#end
+					#if(${oneMany.cascade.detach})
+						, CascadeType.DETACH
+					#end
+				#end	
+			#end
+			#if(${oneOneInverse.retrievingMode})
+				, fetch=FetchType.${oneOneInverse.retrievingMode.toUpperCase()}
+			#end)
+		private Set<${oneMany.relatedEntity}> ${oneMany.name};
+	#end
+	
+	#foreach(${manyOne} in ${entity.associations.manyOne})
+		@ManyToOne(#if(${manyOne.cascade})
+			cascade=
+				#if(${manyOne.cascade.all})
+					CascadeType.ALL
+				#else
+					#if(${manyOne.cascade.persist})
+					CascadeType.PERSIST
+					#end
+					#if(${manyOne.cascade.merge})
+						, CascadeType.MERGE
+					#end
+					#if(${manyOne.cascade.remove})
+						, CascadeType.REMOVE
+					#end
+					#if(${manyOne.cascade.refresh})
+						, CascadeType.REFRESH
+					#end
+					#if(${manyOne.cascade.detach})
+						, CascadeType.DETACH
+					#end
+				#end	
+			#end
+			#if(${manyOne.retrievingMode})
+				, fetch=FetchType.${manyOne.retrievingMode.toUpperCase()}
+			#end)
+		#if(${manyOne.joinColumns.joinColumn.size()}>1)
+			@JoinColumns({				
+		#end
+		#foreach(${joinColumn} in ${manyOne.joinColumns.joinColumn})
+			@JoinColumn(name="${joinColumn.own}", referencedColumnName="${joinColumn.referenced}")
+			#if(${foreach.count} != ${manyOne.joinColumns.joinColumn.size()}) 
+        		, 
+    		#end
+		#end
+		#if(${manyOne.joinColumns.joinColumn.size()}>1)
+			})
+		#end
+		private ${manyOne.relatedEntity} ${manyOne.name};
+	#end
+	
+	#foreach(${manyManyDirect} in ${entity.associations.manyManyDirect})
+		@ManyToMany(#if(${manyManyDirect.cascade})
+			cascade=
+				#if(${manyManyDirect.cascade.all})
+					CascadeType.ALL
+				#else
+					#if(${manyManyDirect.cascade.persist})
+					CascadeType.PERSIST
+					#end
+					#if(${manyManyDirect.cascade.merge})
+						, CascadeType.MERGE
+					#end
+					#if(${manyManyDirect.cascade.remove})
+						, CascadeType.REMOVE
+					#end
+					#if(${manyManyDirect.cascade.refresh})
+						, CascadeType.REFRESH
+					#end
+					#if(${manyManyDirect.cascade.detach})
+						, CascadeType.DETACH
+					#end
+				#end	
+			#end
+			#if(${manyManyDirect.retrievingMode})
+				, fetch=FetchType.${manyManyDirect.retrievingMode.toUpperCase()}
+			#end)
+		@JoinTable(name="${manyManyDirect.joinTable.name}",
+			#if(${manyManyDirect.joinTable.schema}), schema="${manyManyDirect.joinTable.schema}"#end
+			#if(${manyManyDirect.joinTable.catalog}), catalog="${manyManyDirect.joinTable.catalog}"#end
+			, joinColumns={
+				#foreach(${joinColumn} in ${manyManyDirect.joinTable.joinColumns.joinColumn})
+					@JoinColumn(name="${joinColumn.own}", referencedColumnName="${joinColumn.referenced}")
+					#if(${foreach.count} != ${manyManyDirect.joinTable.joinColumns.joinColumn.size()}) 
+        				, 
+    				#end
+				#end
+			}
+			, inverseJoinColumns={
+				#foreach(${inverseJoinColumn} in ${manyManyDirect.joinTable.inverseJoinColumns.joinColumn})
+					@JoinColumn(name="${inverseJoinColumn.own}", referencedColumnName="${inverseJoinColumn.referenced}")
+					#if(${foreach.count} != ${manyManyDirect.joinTable.inverseJoinColumns.joinColumn.size()}) 
+        				, 
+    				#end
+				#end
+			}
+			)
+		private Set<${manyManyDirect.relatedEntity}> ${manyManyDirect.name};
+	#end
+
+	
+	public ${domainObject.name}() {
+	}
+	
+	#foreach(${field} in ${entity.fields.field})		
+    	public ${field.type} get${field.name.substring(0, 1).toUpperCase()}${field.name.substring(1)}() {
+			return ${field.name};
+		}
+	
+		public void set${field.name.substring(0, 1).toUpperCase()}${field.name.substring(1)}(${field.type} ${field.name}) {
+			this.${field.name} = ${field.name};
+		}
+	#end  
+	
+	#foreach(${oneOneDirect} in ${entity.associations.oneOneDirect})
+		public ${oneOneDirect.relatedEntity} get${oneOneDirect.name.substring(0, 1).toUpperCase()}${oneOneDirect.name.substring(1)}() {
+			return ${oneOneDirect.name};
+		}
+	
+		public void set${oneOneDirect.name.substring(0, 1).toUpperCase()}${oneOneDirect.name.substring(1)}(${oneOneDirect.relatedEntity} ${oneOneDirect.name}) {
+			this.${oneOneDirect.name} = ${oneOneDirect.name};
+		}
+	#end
+	
+	#foreach(${manyManyInverse} in ${entity.associations.manyManyInverse})
+		public Set<${manyManyInverse.relatedEntity}> get${manyManyInverse.name.substring(0, 1).toUpperCase()}${manyManyInverse.name.substring(1)}() {
+			return ${manyManyInverse.name};
+		}
+	
+		public void set${manyManyInverse.name.substring(0, 1).toUpperCase()}${manyManyInverse.name.substring(1)}(Set<${manyManyInverse.relatedEntity}> ${manyManyInverse.name}) {
+			this.${manyManyInverse.name} = ${manyManyInverse.name};
+		}
+	#end
+	
+	#foreach(${oneOneInverse} in ${entity.associations.oneOneInverse})
+		public ${oneOneInverse.relatedEntity} get${oneOneInverse.name.substring(0, 1).toUpperCase()}${oneOneInverse.name.substring(1)}() {
+			return ${oneOneInverse.name};
+		}
+	
+		public void set${oneOneInverse.name.substring(0, 1).toUpperCase()}${oneOneInverse.name.substring(1)}(${oneOneInverse.relatedEntity} ${oneOneInverse.name}) {
+			this.${oneOneInverse.name} = ${oneOneInverse.name};
+		}
+	#end
+	
+	#foreach(${oneMany} in ${entity.associations.oneMany})
+		public Set<${oneMany.relatedEntity}> get${oneMany.name.substring(0, 1).toUpperCase()}${oneMany.name.substring(1)}() {
+			return ${oneMany.name};
+		}
+	
+		public void set${oneMany.name.substring(0, 1).toUpperCase()}${oneMany.name.substring(1)}(Set<${oneMany.relatedEntity}> ${oneMany.name}) {
+			this.${oneMany.name} = ${oneMany.name};
+		}
+	#end
+	
+	#foreach(${manyOne} in ${entity.associations.manyOne})
+		public ${manyOne.relatedEntity} get${manyOne.name.substring(0, 1).toUpperCase()}${manyOne.name.substring(1)}() {
+			return ${manyOne.name};
+		}
+	
+		public void set${manyOne.name.substring(0, 1).toUpperCase()}${manyOne.name.substring(1)}(${manyOne.relatedEntity} ${manyOne.name}) {
+			this.${manyOne.name} = ${manyOne.name};
+		}
+	#end
+	
+	#foreach(${manyManyDirect} in ${entity.associations.manyManyDirect})
+		public Set<${manyManyDirect.relatedEntity}> get${manyManyDirect.name.substring(0, 1).toUpperCase()}${manyManyDirect.name.substring(1)}() {
+			return ${manyManyDirect.name};
+		}
+	
+		public void set${manyManyDirect.name.substring(0, 1).toUpperCase()}${manyManyDirect.name.substring(1)}(Set<${manyManyDirect.relatedEntity}> ${manyManyDirect.name}) {
+			this.${manyManyDirect.name} = ${manyManyDirect.name};
+		}
+	#end
+}

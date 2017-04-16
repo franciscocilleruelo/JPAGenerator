@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation=""></xs:include>
+	<xs:element name="jpa">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="domainObject" maxOccurs="unbounded"
+					type="domainObjectComplexType">
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="packageName" type="xs:string"></xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="cascadeComplexType">
+		<xs:sequence>
+			<xs:element name="persist" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="merge" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="remove" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="refresh" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="detach" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element name="all" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="domainObjectComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="repository"
+				type="repositoryComplexType">
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="entity"
+				type="entityComplexType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="repositoryComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="searchMethods"
+				type="searchMethodsComplexType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="primaryKeyType" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="entityComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="table"
+				type="tableComplexType">
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="fields"
+				type="fieldsComplexType">
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="associations"
+				type="associationsComplexType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="searchMethodsComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" name="searchMethod"
+				type="searchMethodComplexType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="searchMethodComplexType">
+		<xs:attribute name="columnName" type="xs:string"></xs:attribute>
+		<xs:attribute name="columnType" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="tableComplexType">
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="schema" type="xs:string"></xs:attribute>
+		<xs:attribute name="catalog" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="fieldsComplexType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="field" type="fieldComplexType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="associationsComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="oneOneDirect"
+				type="oneOneDirectComplexType">
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="manyManyInverse"
+				type="manyManyInverseComplexType">
+			</xs:element>
+			<xs:element name="oneOneInverse" type="oneOneInverseComplexType"
+				maxOccurs="unbounded" minOccurs="0">
+			</xs:element>
+			<xs:element name="oneMany" type="oneManyComplexType"
+				maxOccurs="unbounded" minOccurs="0">
+			</xs:element>
+			<xs:element name="manyOne" type="manyOneComplexType"
+				maxOccurs="unbounded" minOccurs="0"></xs:element>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="manyManyDirect"
+				type="manyManyDirectComplexType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="oneManyComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="cascade"
+				type="cascadeComplexType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="referencedProperty" type="xs:string"></xs:attribute>
+		<xs:attribute name="relatedEntity" type="xs:string"></xs:attribute>
+		<xs:attribute name="retrievingMode" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="oneOneDirectComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="joinColumns"
+				type="joinColumnsComplexType">
+			</xs:element>
+			<xs:element name="cascade" type="cascadeComplexType" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="relatedEntity" type="xs:string"></xs:attribute>
+		<xs:attribute name="retrievingMode" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="manyManyDirectComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="joinTable"
+				type="joinTableComplexType">
+			</xs:element>
+			<xs:element name="cascade" type="cascadeComplexType" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="relatedEntity" type="xs:string"></xs:attribute>
+		<xs:attribute name="retrievingMode" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="manyOneComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="joinColumns"
+				type="joinColumnsComplexType">
+			</xs:element>
+			<xs:element name="cascade" type="cascadeComplexType" maxOccurs="1" minOccurs="0"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="relatedEntity" type="xs:string"></xs:attribute>
+		<xs:attribute name="retrievingMode" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="joinColumnsComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="unbounded" name="joinColumn"
+				type="joinColumnComplexType">
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="joinTableComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="joinColumns"
+				type="joinColumnsComplexType">
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="inverseJoinColumns"
+				type="joinColumnsComplexType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="schema" type="xs:string"></xs:attribute>
+		<xs:attribute name="catalog" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="joinColumnComplexType">
+		<xs:attribute name="own" type="xs:string"></xs:attribute>
+		<xs:attribute name="referenced" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="fieldComplexType">
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="isPrimaryKey" type="xs:boolean"></xs:attribute>
+		<xs:attribute name="columnName" type="xs:string"></xs:attribute>
+		<xs:attribute name="type" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="manyManyInverseComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="cascade"
+				type="cascadeComplexType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="referencedProperty" type="xs:string"></xs:attribute>
+		<xs:attribute name="relatedEntity" type="xs:string"></xs:attribute>
+		<xs:attribute name="retrievingMode" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="oneOneInverseComplexType">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="cascade"
+				type="cascadeComplexType">
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"></xs:attribute>
+		<xs:attribute name="referencedProperty" type="xs:string"></xs:attribute>
+		<xs:attribute name="relatedEntity" type="xs:string"></xs:attribute>
+		<xs:attribute name="retrievingMode" type="xs:string"></xs:attribute>
+	</xs:complexType>
+</xs:schema>

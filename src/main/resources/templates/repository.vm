@@ -1,0 +1,14 @@
+package ${packageName}.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import es.uned.master.enfoquegenerativo.JPAExample.entity.${domainObject.name};
+
+#set($repository = ${domainObject.repository})
+public interface ${domainObject.name}Repository extends JpaRepository<${domainObject.name}, ${repository.primaryKeyType}>{
+	
+	#foreach(${searchMethod} in ${repository.searchMethods.searchMethod})
+		public ${domainObject.name} findBy${searchMethod.columnName.substring(0, 1).toUpperCase()}${searchMethod.columnName.substring(1)}(${searchMethod.columnType} ${searchMethod.columnName});
+	#end
+	
+}
