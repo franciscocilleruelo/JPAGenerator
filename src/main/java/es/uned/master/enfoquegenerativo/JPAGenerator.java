@@ -81,15 +81,15 @@ public class JPAGenerator implements ApplicationRunner {
 		// VALIDADOR
 		File xmlFile = new File(xmlFilePath);
 		InputStream is = null;
-		OutputStream outStream = null;
+		OutputStream os = null;
 		try {
 			logger.info("Se procede a validar el XML facilitado contra el XSD predefinido");
 			is = getClass().getClassLoader().getResourceAsStream(XML_SCHEMA_FILE);
 			byte[] buffer = new byte[is.available()];
 			is.read(buffer);
 		    File schemaFile = new File("xsdFile.tmp");
-		    outStream = new FileOutputStream(schemaFile);
-		    outStream.write(buffer);
+		    os = new FileOutputStream(schemaFile);
+		    os.write(buffer);
 			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = factory.newSchema(schemaFile);
 			Validator validator = schema.newValidator();
@@ -102,8 +102,8 @@ public class JPAGenerator implements ApplicationRunner {
 			if (is!=null){
 				is.close();
 			}
-			if (outStream!=null){
-				outStream.close();
+			if (os!=null){
+				os.close();
 			}
 		}
 
